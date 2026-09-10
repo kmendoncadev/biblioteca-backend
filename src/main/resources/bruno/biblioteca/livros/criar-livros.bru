@@ -1,0 +1,40 @@
+meta {
+  name: Criar livro
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/livros
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "titulo": "O Hobbit",
+    "isbn": "9788595084742",
+    "autor": "J. R. R. Tolkien",
+    "categoria": "FANTASIA",
+    "anoPublicacao": 1937,
+    "quantidade": 5
+  }
+}
+
+tests {
+  test("Status deve ser 201", function() {
+    expect(res.status).to.equal(201);
+  });
+
+  test("Livro deve possuir ID", function() {
+    expect(res.body.id).to.exist;
+  });
+
+  test("Título deve ser O Hobbit", function() {
+    expect(res.body.titulo).to.equal("O Hobbit");
+  });
+}

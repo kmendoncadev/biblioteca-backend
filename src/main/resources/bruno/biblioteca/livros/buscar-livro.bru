@@ -1,0 +1,21 @@
+meta {
+  name: Buscar livro
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8080/api/livros/{{livroId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("Livro deve possuir ID", function() {
+    expect(res.body.id).to.exist;
+  });
+}
