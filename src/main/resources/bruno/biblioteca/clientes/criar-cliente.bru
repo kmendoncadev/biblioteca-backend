@@ -1,0 +1,52 @@
+meta {
+  name: Criar cliente
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/clientes
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nome": "Ana Clara Souza",
+    "matricula": "MAT-2026-001",
+    "email": "ana.clara@email.com",
+    "telefone": "(11) 98765-4321",
+    "status": "ATIVO",
+    "situacao": "SEM_LIVRO"
+  }
+}
+
+tests {
+  test("Status deve ser 201", function() {
+    expect(res.status).to.equal(201);
+  });
+
+  test("Cliente deve possuir ID", function() {
+    expect(res.body.id).to.exist;
+  });
+
+  test("Nome deve ser Ana Clara Souza", function() {
+    expect(res.body.nome).to.equal("Ana Clara Souza");
+  });
+
+  test("Matrícula deve ser MAT-2026-001", function() {
+    expect(res.body.matricula).to.equal("MAT-2026-001");
+  });
+
+  test("Status deve ser ATIVO", function() {
+    expect(res.body.status).to.equal("ATIVO");
+  });
+
+  test("Situação deve ser SEM_LIVRO", function() {
+    expect(res.body.situacao).to.equal("SEM_LIVRO");
+  });
+}

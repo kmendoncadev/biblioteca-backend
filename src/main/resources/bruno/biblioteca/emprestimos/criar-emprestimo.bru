@@ -1,0 +1,44 @@
+meta {
+  name: Criar emprestimo
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://localhost:8080/api/emprestimos
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "clienteId": "aa259dab-2657-40a9-b20d-e18cc6c26470",
+    "livrosIds": [
+      "bb259dab-2657-40a9-b20d-e18cc6c26470"
+    ],
+    "diasParaDevolucao": 14
+  }
+}
+
+tests {
+  test("Status deve ser 201", function() {
+    expect(res.status).to.equal(201);
+  });
+
+  test("Empréstimo deve possuir ID", function() {
+    expect(res.body.id).to.exist;
+  });
+
+  test("Status deve ser ATIVO", function() {
+    expect(res.body.status).to.equal("ATIVO");
+  });
+
+  test("Deve conter lista de livros", function() {
+    expect(res.body.livros).to.be.an("array");
+    expect(res.body.livros.length).to.be.greaterThan(0);
+  });
+}

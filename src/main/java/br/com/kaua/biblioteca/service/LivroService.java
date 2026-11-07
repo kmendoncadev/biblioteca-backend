@@ -6,17 +6,21 @@ import java.util.UUID;
 import org.springframework.stereotype.Service;
 
 import br.com.kaua.biblioteca.entity.Livro;
+import br.com.kaua.biblioteca.enumeration.StatusEmprestimo;
 import br.com.kaua.biblioteca.exception.BusinessException;
 import br.com.kaua.biblioteca.exception.RecursoNaoEncontradoException;
+import br.com.kaua.biblioteca.repository.EmprestimoRepository;
 import br.com.kaua.biblioteca.repository.LivroRepository;
 
 @Service
 public class LivroService {
 
 	private final LivroRepository livroRepository;
+	private final EmprestimoRepository emprestimoRepository;
 
-	public LivroService(LivroRepository livroRepository) {
+	public LivroService(LivroRepository livroRepository, EmprestimoRepository emprestimoRepository) {
 		this.livroRepository = livroRepository;
+		this.emprestimoRepository = emprestimoRepository;
 	}
 
 	public Livro criar(Livro livro) {
@@ -58,6 +62,10 @@ public class LivroService {
 	public void excluir(UUID id) {
 
 		Livro livro = buscarPorId(id);
+
+		if (emprestimoRepository.existsByLivroIdAndStatusIn(id, List.of(StatusEmprestimo.ATIVO, StatusEmprestimo.ATRASADO))) {
+			throw new BusinessException("Não é possível excluir o livro pois há empréstimos pendentes vinculados a ele.");
+		}
 
 		livroRepository.delete(livro);
 	}

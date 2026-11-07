@@ -1,0 +1,21 @@
+meta {
+  name: Listar clientes
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/api/clientes
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("Resposta deve ser uma lista", function() {
+    expect(res.body).to.be.an("array");
+  });
+}

@@ -1,0 +1,21 @@
+meta {
+  name: Buscar emprestimo
+  type: http
+  seq: 3
+}
+
+get {
+  url: http://localhost:8080/api/emprestimos/{{emprestimoId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("Empréstimo deve possuir ID correto", function() {
+    expect(res.body.id).to.equal(bru.getVar("emprestimoId"));
+  });
+}

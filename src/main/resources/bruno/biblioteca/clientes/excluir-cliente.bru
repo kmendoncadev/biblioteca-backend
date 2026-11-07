@@ -1,0 +1,17 @@
+meta {
+  name: Excluir cliente
+  type: http
+  seq: 5
+}
+
+delete {
+  url: http://localhost:8080/api/clientes/{{clienteId}}
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 204", function() {
+    expect(res.status).to.equal(204);
+  });
+}

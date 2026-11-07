@@ -1,0 +1,40 @@
+meta {
+  name: Atualizar cliente
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/api/clientes/{{clienteId}}
+  body: json
+  auth: none
+}
+
+headers {
+  Content-Type: application/json
+}
+
+body:json {
+  {
+    "nome": "Ana Clara Souza Santos",
+    "matricula": "MAT-2026-001",
+    "email": "ana.clara@email.com",
+    "telefone": "(11) 99999-8888",
+    "status": "ATIVO",
+    "situacao": "COM_LIVRO"
+  }
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("Nome deve ter sido atualizado", function() {
+    expect(res.body.nome).to.equal("Ana Clara Souza Santos");
+  });
+
+  test("Situação deve ter sido atualizada", function() {
+    expect(res.body.situacao).to.equal("COM_LIVRO");
+  });
+}

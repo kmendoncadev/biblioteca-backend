@@ -1,0 +1,25 @@
+meta {
+  name: Devolver emprestimo
+  type: http
+  seq: 4
+}
+
+put {
+  url: http://localhost:8080/api/emprestimos/{{emprestimoId}}/devolver
+  body: none
+  auth: none
+}
+
+tests {
+  test("Status deve ser 200", function() {
+    expect(res.status).to.equal(200);
+  });
+
+  test("Status deve ser DEVOLVIDO", function() {
+    expect(res.body.status).to.equal("DEVOLVIDO");
+  });
+
+  test("Data de devolução real deve existir", function() {
+    expect(res.body.dataDevolucaoReal).to.exist;
+  });
+}
