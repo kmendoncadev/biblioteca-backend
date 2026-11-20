@@ -1,5 +1,6 @@
 package br.com.kaua.biblioteca.entity;
 
+import java.time.LocalDate;
 import java.util.UUID;
 
 import br.com.kaua.biblioteca.enumeration.SituacaoCliente;
@@ -59,4 +60,16 @@ public class Cliente {
 	@Convert(converter = SituacaoClienteConverter.class)
 	private SituacaoCliente situacao;
 
+	@Column(name = "data_fim_suspensao")
+	private LocalDate dataFimSuspensao;
+
+	public Cliente(UUID id, String nome, String matricula, String email, String telefone, StatusCliente status, SituacaoCliente situacao) {
+		this.id = id;
+		this.nome = nome;
+		this.matricula = matricula;
+		this.email = email;
+		this.telefone = telefone;
+		this.status = status;
+		this.situacao = situacao;
+	}
 }

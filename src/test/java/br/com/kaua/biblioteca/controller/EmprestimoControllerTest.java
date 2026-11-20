@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import static org.mockito.Mockito.verify;
@@ -46,6 +47,7 @@ class EmprestimoControllerTest {
 
     private Emprestimo emprestimoMock;
     private UUID emprestimoId;
+    private UUID livroId;
 
     @BeforeEach
     void setUp() {
@@ -55,6 +57,7 @@ class EmprestimoControllerTest {
                 .build();
 
         emprestimoId = UUID.randomUUID();
+        livroId = UUID.randomUUID();
         Cliente cliente = new Cliente(
                 UUID.randomUUID(),
                 "Lucas Santos",
@@ -65,7 +68,7 @@ class EmprestimoControllerTest {
                 SituacaoCliente.COM_LIVRO
         );
         Livro livro = new Livro(
-                UUID.randomUUID(),
+                livroId,
                 "Domain-Driven Design",
                 "9780321125217",
                 "Eric Evans",
@@ -130,17 +133,39 @@ class EmprestimoControllerTest {
     }
 
     @Test
-    void devolver_DeveRetornar200() throws Exception {
+    void devolver_SemBody_DeveRetornar200() throws Exception {
         emprestimoMock.setStatus(StatusEmprestimo.DEVOLVIDO);
         emprestimoMock.setDataDevolucaoReal(LocalDateTime.now());
 
-        when(emprestimoService.devolver(emprestimoId)).thenReturn(emprestimoMock);
+        when(emprestimoService.devolver(eq(emprestimoId), any())).thenReturn(emprestimoMock);
 
         mockMvc.perform(put("/api/emprestimos/{id}/devolver", emprestimoId))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.id").value(emprestimoId.toString()))
                 .andExpect(jsonPath("$.status").value("DEVOLVIDO"));
 
-        verify(emprestimoService).devolver(emprestimoId);
+        verify(emprestimoService).devolver(eq(emprestimoId), any());
+    }
+
+    @Test
+    void devolver_ComBodyParcial_DeveRetornar200() throws Exception {
+        emprestimoMock.setStatus(StatusEmprestimo.PARCIALMENTE_DEVOLVIDO);
+
+        when(emprestimoService.devolver(eq(emprestimoId), eq(List.of(livroId)))).thenReturn(emprestimoMock);
+
+        String json = """
+                {
+                    "livrosIds": ["%s"]
+                }
+                """.formatted(livroId);
+
+        mockMvc.perform(put("/api/emprestimos/{id}/devolver", emprestimoId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(json))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(emprestimoId.toString()))
+                .andExpect(jsonPath("$.status").value("PARCIALMENTE_DEVOLVIDO"));
+
+        verify(emprestimoService).devolver(eq(emprestimoId), eq(List.of(livroId)));
     }
 }

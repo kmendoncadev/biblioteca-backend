@@ -89,7 +89,7 @@ public class ClienteService {
 
 		Cliente cliente = buscarPorId(id);
 
-		if (emprestimoRepository.existsByClienteIdAndStatusIn(id, List.of(StatusEmprestimo.ATIVO, StatusEmprestimo.ATRASADO))) {
+		if (emprestimoRepository.existsByClienteIdAndStatusIn(id, List.of(StatusEmprestimo.ATIVO, StatusEmprestimo.ATRASADO, StatusEmprestimo.PARCIALMENTE_DEVOLVIDO))) {
 			throw new BusinessException("Não é possível excluir o cliente pois ele possui empréstimos pendentes.");
 		}
 

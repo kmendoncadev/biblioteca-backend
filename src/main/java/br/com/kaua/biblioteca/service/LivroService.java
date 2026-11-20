@@ -63,7 +63,7 @@ public class LivroService {
 
 		Livro livro = buscarPorId(id);
 
-		if (emprestimoRepository.existsByLivroIdAndStatusIn(id, List.of(StatusEmprestimo.ATIVO, StatusEmprestimo.ATRASADO))) {
+		if (emprestimoRepository.existsByLivroIdAndStatusIn(id, List.of(StatusEmprestimo.ATIVO, StatusEmprestimo.ATRASADO, StatusEmprestimo.PARCIALMENTE_DEVOLVIDO))) {
 			throw new BusinessException("Não é possível excluir o livro pois há empréstimos pendentes vinculados a ele.");
 		}
 

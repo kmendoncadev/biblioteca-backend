@@ -4,7 +4,8 @@ public enum StatusEmprestimo {
 
     ATIVO(1),
     DEVOLVIDO(2),
-    ATRASADO(3);
+    ATRASADO(3),
+    PARCIALMENTE_DEVOLVIDO(4);
 
     private final int codigo;
 

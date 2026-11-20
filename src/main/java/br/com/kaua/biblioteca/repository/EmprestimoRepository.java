@@ -19,6 +19,9 @@ public interface EmprestimoRepository extends JpaRepository<Emprestimo, UUID> {
 
     boolean existsByClienteIdAndStatusInAndIdNot(UUID clienteId, Collection<StatusEmprestimo> statuses, UUID id);
 
-    @Query("SELECT CASE WHEN COUNT(e) > 0 THEN TRUE ELSE FALSE END FROM Emprestimo e JOIN e.livros l WHERE l.id = :livroId AND e.status IN :statuses")
+    @Query("SELECT CASE WHEN COUNT(i) > 0 THEN TRUE ELSE FALSE END FROM ItemEmprestimo i WHERE i.livro.id = :livroId AND i.dataDevolucao IS NULL AND i.emprestimo.status IN :statuses")
     boolean existsByLivroIdAndStatusIn(@Param("livroId") UUID livroId, @Param("statuses") Collection<StatusEmprestimo> statuses);
+
+    @Query("SELECT CASE WHEN COUNT(i) > 0 THEN TRUE ELSE FALSE END FROM ItemEmprestimo i WHERE i.emprestimo.cliente.id = :clienteId AND i.dataDevolucao IS NULL AND i.emprestimo.status != br.com.kaua.biblioteca.enumeration.StatusEmprestimo.DEVOLVIDO")
+    boolean existsPendingItemsByClienteId(@Param("clienteId") UUID clienteId);
 }

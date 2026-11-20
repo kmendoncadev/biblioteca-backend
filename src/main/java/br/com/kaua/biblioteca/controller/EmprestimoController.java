@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.kaua.biblioteca.dto.CriarEmprestimoDTO;
+import br.com.kaua.biblioteca.dto.DevolucaoDTO;
 import br.com.kaua.biblioteca.entity.Emprestimo;
 import br.com.kaua.biblioteca.service.EmprestimoService;
 import jakarta.validation.Valid;
@@ -48,7 +49,10 @@ public class EmprestimoController {
     }
 
     @PutMapping("/{id}/devolver")
-    public ResponseEntity<Emprestimo> devolver(@PathVariable UUID id) {
-        return ResponseEntity.ok(emprestimoService.devolver(id));
+    public ResponseEntity<Emprestimo> devolver(
+            @PathVariable UUID id,
+            @RequestBody(required = false) DevolucaoDTO dto) {
+        List<UUID> livrosIds = (dto != null) ? dto.getLivrosIds() : null;
+        return ResponseEntity.ok(emprestimoService.devolver(id, livrosIds));
     }
 }
